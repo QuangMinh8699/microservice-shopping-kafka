@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Order {
     private String orderId;
     private String name;
+    private String skuCode;
     private int qty;
     private double price;
 }
