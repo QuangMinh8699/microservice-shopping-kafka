@@ -17,14 +17,22 @@ public class OrderConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderConsumer.class);
     @KafkaListener(topics = "${spring.kafka.topic.name}",
     groupId = "${spring.kafka.consumer.group-id}")
-    public void consume(OrderEvent event){
+    public boolean isInStock(OrderEvent event){
         LOGGER.info(String.format("Order event received in stock service => %s",event));
         //
         Order order = event.getOrder();
         String skuCode = order.getSkuCode();
         Inventory inventory = inventoryRepository.findBySkuCode(skuCode);
-        if(inventory.getQuantity() <= order.getQty() || inventory.getQuantity()==0){
-            LOGGER.info(String.format("Product is not in stock, please try a gain"));
+        Integer oldQuantity = inventory.getQuantity();
+        Integer newQuantity = oldQuantity-order.getQty();
+        if(newQuantity >= 0){
+            inventory.setQuantity(newQuantity);
+            inventoryRepository.save(inventory);
+            return true;
+        }else{
+            inventory.setQuantity(0);
+            inventoryRepository.save(inventory);
+            return false;
         }
 
 
