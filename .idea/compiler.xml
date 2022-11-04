@@ -7,8 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="base-domains" />
-        <module name="order-service" />
         <module name="payment-service" />
+        <module name="order-service" />
         <module name="inventory-service" />
         <module name="email-service" />
       </profile>
